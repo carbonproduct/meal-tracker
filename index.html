@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="it">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claudio C. - Meal Tracker</title>
+    <title>Claudio C. - Diario Alimentare</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -21,7 +21,7 @@
             padding: 20px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: #fff;
             padding: 30px;
@@ -31,7 +31,7 @@
         header {
             border-bottom: 2px solid var(--primary-light);
             padding-bottom: 20px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -39,12 +39,46 @@
         }
         h1 { margin: 0; color: var(--primary); font-size: 24px; }
         .meta-info { font-size: 14px; color: #666; }
+        
+        /* Sezione Filtri */
+        .filters-container {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-size: 12px;
+            font-weight: bold;
+            color: #555;
+        }
+        .filter-group select, .filter-group input {
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            font-size: 14px;
+            outline: none;
+        }
+        .filter-group select:focus, .filter-group input:focus {
+            border-color: var(--primary);
+        }
+
+        /* Tabella */
         .table-responsive { overflow-x: auto; }
         table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
-            font-size: 15px;
+            font-size: 14px;
         }
         th, td {
             padding: 12px 15px;
@@ -56,18 +90,23 @@
             color: var(--primary);
             font-weight: 600;
         }
-        tr:hover { background-color: #f5f5f5; }
+        tr:hover { background-color: #f9f9f9; }
+        tr.hidden { display: none !important; }
+        
+        /* Badge Stili */
         .badge {
             display: inline-block;
             padding: 4px 8px;
             border-radius: 4px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: bold;
+            text-transform: uppercase;
         }
-        .badge-perfect { background-color: #c8e6c9; color: #256029; }
-        .badge-flex { background-color: #e1f5fe; color: #0288d1; }
-        .badge-missed { background-color: #ffecb3; color: #b78103; }
-        .badge-activity { background-color: #ede7f6; color: #5e35b1; }
+        .badge-perfetto { background-color: #c8e6c9; color: #256029; }
+        .badge-flessibile { background-color: #e1f5fe; color: #0288d1; }
+        .badge-mancato { background-color: #ffecb3; color: #b78103; }
+        .badge-attivo { background-color: #ede7f6; color: #5e35b1; }
+        .badge-surplus { background-color: #ffe0b2; color: #e65100; }
     </style>
 </head>
 <body>
@@ -83,68 +122,255 @@
         </div>
     </header>
 
+    <!-- Pannello di Controllo Filtri -->
+    <div class="filters-container">
+        <div class="filter-group">
+            <label for="searchFilter">Cerca Alimento/Nota:</label>
+            <input type="text" id="searchFilter" placeholder="Es. uova, pollo, pasta...">
+        </div>
+        <div class="filter-group">
+            <label for="weekFilter">Settimana:</label>
+            <select id="weekFilter">
+                <option value="all">Tutte</option>
+                <option value="W1">W1</option>
+                <option value="W2">W2</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="dayFilter">Giorno:</label>
+            <select id="dayFilter">
+                <option value="all">Tutti</option>
+                <option value="Lunedì">Lunedì</option>
+                <option value="Martedì">Martedì</option>
+                <option value="Mercoledì">Mercoledì</option>
+                <option value="Giovedì">Giovedì</option>
+                <option value="Venerdì">Venerdì</option>
+                <option value="Sabato">Sabato</option>
+                <option value="Domenica">Domenica</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label for="tagFilter">Etichetta:</label>
+            <select id="tagFilter">
+                <option value="all">Tutte</option>
+                <option value="Colazione">Colazione</option>
+                <option value="Spuntino">Spuntino</option>
+                <option value="Pranzo">Pranzo</option>
+                <option value="Merenda">Merenda</option>
+                <option value="Cena">Cena</option>
+                <option value="Idratazione">Idratazione</option>
+                <option value="Attività">Attività</option>
+                <option value="Extra">Extra</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Tabella Dati -->
     <div class="table-responsive">
-        <table>
+        <table id="trackerTable">
             <thead>
                 <tr>
-                    <th>Giorno</th>
-                    <th>Pasto / Slot</th>
-                    <th>Alimenti & Bevande</th>
-                    <th>Allineamento & Note del Piano</th>
+                    <th>Sett.</th>
+                    <th>Data Completa</th>
+                    <th>Slot</th>
+                    <th>Alimenti &amp; Bevande</th>
+                    <th>Valutazione</th>
+                    <th>Note del Piano Alimentare</th>
                 </tr>
             </thead>
             <tbody>
-                <!-- LUNEDÌ WEEK 1 -->
-                <tr><td>Lun (W1)</td><td>Colazione</td><td>1 fetta di pane con burro, 3 caffè</td><td><span class="badge badge-flex">Flessibile</span> Carboidrati inseriti nei macro giornalieri.</td></tr>
-                <tr><td>Lun (W1)</td><td>Spuntino</td><td>Spuntino saltato</td><td><span class="badge badge-missed">Mancato</span> Mancata la quota di 30g di frutta secca.</td></tr>
-                <tr><td>Lun (W1)</td><td>Pranzo</td><td>150g pasta, zucchine, gamberi, merluzzo, olio EVO</td><td><span class="badge badge-perfect">Perfetto</span> Esatti 150g di pasta. Ottimo mix di proteine.</td></tr>
-                <tr><td>Lun (W1)</td><td>Merenda</td><td>2 banane</td><td><span class="badge badge-perfect">Perfetto</span> Sfruttata la quota frutta giornaliera (2 frutti medi).</td></tr>
-                <tr><td>Lun (W1)</td><td>Cena</td><td>Pasta, salsa di pomodoro, merluzzo</td><td><span class="badge badge-perfect">Perfetto</span> Linee guida della cena rispettate appieno.</td></tr>
-                <tr><td>Lun (W1)</td><td>Extra</td><td>100g pistacchi</td><td><span class="badge badge-flex">Calorie Surplus</span> Bonus calorico consistente, ottimo per la massa.</td></tr>
+                <!-- SETTIMANA 1 -->
+                <tr data-week="W1" data-day="Lunedì" data-tag="Colazione">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Colazione</td><td>1 fetta di pane con burro, 3 caffè</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>Carboidrati inseriti correttamente nei macro giornalieri.</td>
+                </tr>
+                <tr data-week="W1" data-day="Lunedì" data-tag="Spuntino">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Spuntino</td><td>Spuntino saltato</td>
+                    <td><span class="badge badge-mancato">Mancato</span></td><td>Mancata la quota di 30g di frutta secca.</td>
+                </tr>
+                <tr data-week="W1" data-day="Lunedì" data-tag="Pranzo">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Pranzo</td><td>150g pasta, zucchine, gamberi, merluzzo, olio EVO</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Esatti 150g di pasta. Ottimo mix di fonti proteiche.</td>
+                </tr>
+                <tr data-week="W1" data-day="Lunedì" data-tag="Merenda">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Merenda</td><td>2 banane</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Sfruttata la quota frutta giornaliera (2 frutti medi).</td>
+                </tr>
+                <tr data-week="W1" data-day="Lunedì" data-tag="Cena">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Cena</td><td>Pasta, salsa di pomodoro, merluzzo</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Linee guida della cena rispettate appieno.</td>
+                </tr>
+                <tr data-week="W1" data-day="Lunedì" data-tag="Extra">
+                    <td>W1</td><td>Lunedì 29 Giugno 2026</td><td>Extra</td><td>100g pistacchi</td>
+                    <td><span class="badge badge-surplus">Surplus</span></td><td>Bonus calorico consistente (~560 kcal), utile per la massa ma quota grassi alta.</td>
+                </tr>
                 
-                <!-- MARTEDÌ -->
-                <tr><td>Mar (W1)</td><td>Colazione</td><td>Anacardi, pistacchi, 3 caffè</td><td><span class="badge badge-perfect">Perfetto</span> Coperta la quota di 30g di frutta secca mattutina.</td></tr>
-                <tr><td>Mar (W1)</td><td>Pranzo</td><td>Pasta al pomodoro, bastoncini di merluzzo, insalata, olio EVO</td><td><span class="badge badge-flex">Flessibile</span> Carboidrati e verdure ok. Bastoncini contengono panatura.</td></tr>
-                <tr><td>Mar (W1)</td><td>Merenda</td><td>1 banana</td><td><span class="badge badge-perfect">Perfetto</span> Quota frutta parzialmente coperta.</td></tr>
-                <tr><td>Mar (W1)</td><td>Cena</td><td>Piccola pizza, 3 uova, spinaci, insalata verde, olio EVO</td><td><span class="badge badge-flex">Flessibile</span> 3 uova come sostituto proteico. Pizza come sostituto carboidrati.</td></tr>
-                
-                <!-- MERCOLEDÌ -->
-                <tr><td>Mer (W1)</td><td>Colazione</td><td>1 caffè, frutta secca</td><td><span class="badge badge-perfect">Perfetto</span> Target frutta secca rispettato.</td></tr>
-                <tr><td>Mer (W1)</td><td>Pranzo</td><td>1 bratwurst, un pezzetto di pane, una porzione di patatine</td><td><span class="badge badge-flex">Regola 80/20</span> Viaggio a Berlino. Rientra nel 20% di flessibilità concesso.</td></tr>
-                <tr><td>Mer (W1)</td><td>Cena</td><td>80g manzo, 6 ravioli gamberi/verdure, Bibimbap bowl (80g riso, tonno, 1 uovo, verdure miste)</td><td><span class="badge badge-perfect">Ottimo</span> Eccellente varietà di micronutrienti e proteine. Raggiunti i 200g di verdure.</td></tr>
-                <tr><td>Mer (W1)</td><td>Extra</td><td>20g semi di girasole tostati</td><td><span class="badge badge-flex">Flessibile</span> Ottima fonte di grassi sani post-cena.</td></tr>
+                <tr data-week="W1" data-day="Martedì" data-tag="Colazione">
+                    <td>W1</td><td>Martedì 30 Giugno 2026</td><td>Colazione</td><td>Anacardi, pistacchi, 3 caffè</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Coperta ottimamente la quota di 30g di frutta secca mattutina.</td>
+                </tr>
+                <tr data-week="W1" data-day="Martedì" data-tag="Pranzo">
+                    <td>W1</td><td>Martedì 30 Giugno 2026</td><td>Pranzo</td><td>Pasta al pomodoro, bastoncini di merluzzo, insalata, olio EVO</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>Carboidrati e verdure ok. I bastoncini aggiungono quota grassi/carbo da panatura.</td>
+                </tr>
+                <tr data-week="W1" data-day="Martedì" data-tag="Merenda">
+                    <td>W1</td><td>Martedì 30 Giugno 2026</td><td>Merenda</td><td>1 banana</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Quota frutta parzialmente coperta.</td>
+                </tr>
+                <tr data-week="W1" data-day="Martedì" data-tag="Cena">
+                    <td>W1</td><td>Martedì 30 Giugno 2026</td><td>Cena</td><td>Piccola pizza, 3 uova, spinaci, insalata verde, olio EVO</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>3 uova come ottimo sostituto proteico. Pizza come sostituto dei carboidrati.</td>
+                </tr>
 
-                <!-- GIOVEDÌ -->
-                <tr><td>Gio (W1)</td><td>Colazione</td><td>1 caffè</td><td><span class="badge badge-missed">Mancato</span> Saltata la colazione/frutta secca.</td></tr>
-                <tr><td>Gio (W1)</td><td>Pranzo</td><td>2 quesadillas (manzo e formaggio), 1 birra, acqua</td><td><span class="badge badge-flex">Regola 80/20</span> Viaggio a Berlino. Surplus calorico per la massa.</td></tr>
-                <tr><td>Gio (W1)</td><td>Merenda</td><td>1 banana</td><td><span class="badge badge-perfect">Perfetto</span> Spuntino con frutta ok.</td></tr>
-                <tr><td>Gio (W1)</td><td>Cena</td><td>Insalata mista, pasta ripiena di gamberi, avocado, menta, parmigiano e finferli, 1 birra grande</td><td><span class="badge badge-perfect">Ottimo</span> Avocado e parmigiano usati come ottimi sostituti dei grassi (EVO).</td></tr>
-                <tr><td>Gio (W1)</td><td>Attività</td><td>Lunga camminata post-cena + 1 birra grande + 1 piccola</td><td><span class="badge badge-activity">Passi ok</span> Ottimo per stimolare il metabolismo (Target 10.000 passi).</td></tr>
+                <tr data-week="W1" data-day="Mercoledì" data-tag="Colazione">
+                    <td>W1</td><td>Mercoledì 1 Luglio 2026</td><td>Colazione</td><td>1 caffè, frutta secca</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Target frutta secca rispettato.</td>
+                </tr>
+                <tr data-week="W1" data-day="Mercoledì" data-tag="Pranzo">
+                    <td>W1</td><td>Mercoledì 1 Luglio 2026</td><td>Pranzo</td><td>1 bratwurst, un pezzetto di pane, una porzione di patatine</td>
+                    <td><span class="badge badge-flessibile">Regola 80/20</span></td><td>Viaggio a Berlino. Rientra perfettamente nel 20% di flessibilità concesso.</td>
+                </tr>
+                <tr data-week="W1" data-day="Mercoledì" data-tag="Cena">
+                    <td>W1</td><td>Mercoledì 1 Luglio 2026</td><td>Cena</td><td>80g manzo, 6 ravioli gamberi/verdure, Bibimbap bowl (80g riso, tonno, 1 uovo, verdure miste)</td>
+                    <td><span class="badge badge-perfetto">Ottimo</span></td><td>Eccellente varietà di micronutrienti e proteine. Raggiunti i 200g di verdure.</td>
+                </tr>
+                <tr data-week="W1" data-day="Mercoledì" data-tag="Extra">
+                    <td>W1</td><td>Mercoledì 1 Luglio 2026</td><td>Extra</td><td>20g semi di girasole tostati</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>Ottima fonte extra di grassi sani nel post-cena.</td>
+                </tr>
 
-                <!-- VENERDÌ -->
-                <tr><td>Ven (W1)</td><td>Colazione</td><td>2 caffè</td><td><span class="badge badge-missed">Mancato</span> Pasto mattutino saltato.</td></tr>
-                <tr><td>Ven (W1)</td><td>Pranzo</td><td>~110g riso e farro, petto di pollo a cubetti, verdure verdi miste</td><td><span class="badge badge-perfect">Perfetto</span> Petto di pollo come fonte magra ideale. Rientro nel piano.</td></tr>
-                <tr><td>Ven (W1)</td><td>Merenda</td><td>1 banana, 2 caffè, caramelle</td><td><span class="badge badge-flex">Flessibile</span> Caramelle come boost energetico rapido da viaggio.</td></tr>
-                <tr><td>Ven (W1)</td><td>Cena</td><td>Sandwich (2 cosce di pollo, formaggio, insalata), pannocchia, patatine, 1 birra</td><td><span class="badge badge-perfect">Approvato</span> Cosce di pollo esplicitamente permesse nelle note del nutrizionista.</td></tr>
+                <tr data-week="W1" data-day="Giovedì" data-tag="Colazione">
+                    <td>W1</td><td>Giovedì 2 Luglio 2026</td><td>Colazione</td><td>1 caffè</td>
+                    <td><span class="badge badge-mancato">Mancato</span></td><td>Saltata la colazione e la quota di frutta secca.</td>
+                </tr>
+                <tr data-week="W1" data-day="Giovedì" data-tag="Pranzo">
+                    <td>W1</td><td>Giovedì 2 Luglio 2026</td><td>Pranzo</td><td>2 quesadillas (manzo e formaggio), 1 birra, acqua</td>
+                    <td><span class="badge badge-flessibile">Regola 80/20</span></td><td>Viaggio a Berlino. Ottimo surplus calorico per la massa.</td>
+                </tr>
+                <tr data-week="W1" data-day="Giovedì" data-tag="Merenda">
+                    <td>W1</td><td>Giovedì 2 Luglio 2026</td><td>Merenda</td><td>1 banana</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Spuntino pomeridiano con frutta eseguito con successo.</td>
+                </tr>
+                <tr data-week="W1" data-day="Giovedì" data-tag="Cena">
+                    <td>W1</td><td>Giovedì 2 Luglio 2026</td><td>Cena</td><td>Insalata mista, pasta ripiena di gamberi, avocado, menta, parmigiano e finferli, 1 birra grande</td>
+                    <td><span class="badge badge-perfetto">Ottimo</span></td><td>Avocado e parmigiano usati efficacemente come sostituti dei grassi (EVO).</td>
+                </tr>
+                <tr data-week="W1" data-day="Giovedì" data-tag="Attività">
+                    <td>W1</td><td>Giovedì 2 Luglio 2026</td><td>Attività</td><td>Lunga camminata post-cena + 1 birra grande + 1 piccola</td>
+                    <td><span class="badge badge-attivo">Attivo</span></td><td>Ottimo movimento per stimolare il metabolismo (Target di 10.000 passi).</td>
+                </tr>
 
-                <!-- SABATO -->
-                <tr><td>Sab (W1)</td><td>Colazione</td><td>Caffè, anacardi</td><td><span class="badge badge-perfect">Perfetto</span> Target frutta secca mattutina centrato.</td></tr>
-                <tr><td>Sab (W1)</td><td>Pranzo</td><td>Brunch: 2 uova, pane, 2 hash browns, 2 bacon, burro, patatine, molta acqua</td><td><span class="badge badge-flex">Mass Fuel</span> Uova come ottima base proteica. Ottima idratazione.</td></tr>
-                <tr><td>Sab (W1)</td><td>Merenda</td><td>1 banana, 3 bicchieri di vino, patatine condivise</td><td><span class="badge badge-flex">Regola 80/20</span> Gestione flessibile del weekend sociale.</td></tr>
-                <tr><td>Sab (W1)</td><td>Cena</td><td>150g risotto ai frutti di mare, vino, molta acqua</td><td><span class="badge badge-perfect">Perfetto</span> Centrato il target dei carboidrati serali (~160g riso). Proteine miste approvate.</td></tr>
+                <tr data-week="W1" data-day="Venerdì" data-tag="Colazione">
+                    <td>W1</td><td>Venerdì 3 Luglio 2026</td><td>Colazione</td><td>2 caffè</td>
+                    <td><span class="badge badge-mancato">Mancato</span></td><td>Pasto mattutino e frutta secca saltati.</td>
+                </tr>
+                <tr data-week="W1" data-day="Venerdì" data-tag="Pranzo">
+                    <td>W1</td><td>Venerdì 3 Luglio 2026</td><td>Pranzo</td><td>~110g riso e farro, petto di pollo a cubetti, verdure verdi miste</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Il petto di pollo rappresenta la fonte magra ideale. Ottimo rientro nel piano.</td>
+                </tr>
+                <tr data-week="W1" data-day="Venerdì" data-tag="Merenda">
+                    <td>W1</td><td>Venerdì 3 Luglio 2026</td><td>Merenda</td><td>1 banana, 2 caffè, caramelle</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>Caramelle utilizzate come boost energetico rapido durante il viaggio (80/20).</td>
+                </tr>
+                <tr data-week="W1" data-day="Venerdì" data-tag="Cena">
+                    <td>W1</td><td>Venerdì 3 Luglio 2026</td><td>Cena</td><td>Sandwich (2 cosce di pollo, formaggio, insalata), pannocchia, patatine, 1 birra</td>
+                    <td><span class="badge badge-perfetto">Approvato</span></td><td>Cosce di pollo esplicitamente permesse nelle note del piano del nutrizionista.</td>
+                </tr>
 
-                <!-- DOMENICA (INIZIO W2) -->
-                <tr><td>Dom (W2)</td><td>Colazione</td><td>2 caffè, 1 fetta di pane con burro</td><td><span class="badge badge-flex">Flessibile</span> Rientro nella routine di casa.</td></tr>
-                <tr><td>Dom (W2)</td><td>Pomeriggio</td><td>1 pinta di birra + sessione di ciclismo e camminata</td><td><span class="badge badge-activity">Attivo</span> Alcol bilanciato dal dispendio energetico in bici.</td></tr>
-                <tr><td>Dom (W2)</td><td>Cena</td><td>1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)</td><td><span class="badge badge-flex">Mass Fuel</span> Ottimo utilizzo degli avanzi di tortilla (uova come sostituto proteico).</td></tr>
+                <tr data-week="W1" data-day="Sabato" data-tag="Colazione">
+                    <td>W1</td><td>Sabato 4 Luglio 2026</td><td>Colazione</td><td>Caffè, anacardi</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Target frutta secca mattutina centrato appieno.</td>
+                </tr>
+                <tr data-week="W1" data-day="Sabato" data-tag="Pranzo">
+                    <td>W1</td><td>Sabato 4 Luglio 2026</td><td>Pranzo</td><td>Brunch: 2 uova, pane, 2 hash browns, 2 bacon, burro, patatine, molta acqua</td>
+                    <td><span class="badge badge-surplus">Mass Fuel</span></td><td>Uova come ottima base proteica. Ottimo apporto di liquidi.</td>
+                </tr>
+                <tr data-week="W1" data-day="Sabato" data-tag="Merenda">
+                    <td>W1</td><td>Sabato 4 Luglio 2026</td><td>Merenda</td><td>1 banana, 3 bicchieri di vino, patatine condivise</td>
+                    <td><span class="badge badge-flessibile">Regola 80/20</span></td><td>Gestione flessibile del weekend e della convivialità.</td>
+                </tr>
+                <tr data-week="W1" data-day="Sabato" data-tag="Cena">
+                    <td>W1</td><td>Sabato 4 Luglio 2026</td><td>Cena</td><td>150g risotto ai frutti di mare, vino, molta acqua</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Centrato quasi al grammo il target dei carboidrati serali (~160g riso).</td>
+                </tr>
 
-                <!-- LUNEDÌ (OGGI W2) -->
-                <tr><td>Lun (W2)</td><td>Colazione</td><td>3 caffè, 10g semi di girasole, 20g anacardi</td><td><span class="badge badge-perfect">Perfetto</span> Raggiunto il target di 30g di frutta secca/semi.</td></tr>
-                <tr><td>Lun (W2)</td><td>Pranzo</td><td>150g pasta con 250g zucchine + 1/3 tortilla de patata (2 uova, patate)</td><td><span class="badge badge-perfect">Perfetto</span> Centrato l'obiettivo di 150g di pasta e 250g di verdure.</td></tr>
+                <!-- SETTIMANA 2 -->
+                <tr data-week="W2" data-day="Domenica" data-tag="Colazione">
+                    <td>W2</td><td>Domenica 5 Luglio 2026</td><td>Colazione</td><td>2 caffè, 1 fetta di pane con burro</td>
+                    <td><span class="badge badge-flessibile">Flessibile</span></td><td>Rientro controllato nella routine casalinga.</td>
+                </tr>
+                <tr data-week="W2" data-day="Domenica" data-tag="Idratazione">
+                    <td>W2</td><td>Domenica 5 Luglio 2026</td><td>Idratazione</td><td>Molta acqua durante la giornata</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Target idratazione di 2.5L pienamente supportato.</td>
+                </tr>
+                <tr data-week="W2" data-day="Domenica" data-tag="Attività">
+                    <td>W2</td><td>Domenica 5 Luglio 2026</td><td>Attività</td><td>1 pinta di birra + sessione di ciclismo e camminata</td>
+                    <td><span class="badge badge-attivo">Attivo</span></td><td>Alcol ampiamente bilanciato dall'attività cardiovascolare in bicicletta.</td>
+                </tr>
+                <tr data-week="W2" data-day="Domenica" data-tag="Cena">
+                    <td>W2</td><td>Domenica 5 Luglio 2026</td><td>Cena</td><td>1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)</td>
+                    <td><span class="badge badge-surplus">Mass Fuel</span></td><td>Utilizzo intelligente degli avanzi. Uova inserite come switch proteico serale.</td>
+                </tr>
+
+                <tr data-week="W2" data-day="Lunedì" data-tag="Colazione">
+                    <td>W2</td><td>Lunedì 6 Luglio 2026</td><td>Colazione</td><td>3 caffè, 10g semi di girasole, 20g anacardi</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Raggiunto con precisione il target di 30g di frutta secca/semi mattutini.</td>
+                </tr>
+                <tr data-week="W2" data-day="Lunedì" data-tag="Pranzo">
+                    <td>W2</td><td>Lunedì 6 Luglio 2026</td><td>Pranzo</td><td>150g pasta con 250g zucchine + 1/3 tortilla de patata (2 uova, patate)</td>
+                    <td><span class="badge badge-perfetto">Perfetto</span></td><td>Centrato perfettamente l'obiettivo di 150g di pasta e l'alto volume di verdure (250g).</td>
+                </tr>
+                <tr data-week="W2" data-day="Lunedì" data-tag="Idratazione">
+                    <td>W2</td><td>Lunedì 6 Luglio 2026</td><td>Idratazione</td><td>~0.8L di acqua (Primo pomeriggio)</td>
+                    <td><span class="badge badge-flessibile">In Corso</span></td><td>Circa 1/3 del target giornaliero completato; previsto recupero idrico in bici.</td>
+                </tr>
+                <tr data-week="W2" data-day="Lunedì" data-tag="Attività">
+                    <td>W2</td><td>Lunedì 6 Luglio 2026</td><td>Attività</td><td>Pianificata 1 ora di ciclismo nel pomeriggio</td>
+                    <td><span class="badge badge-attivo">Pianificato</span></td><td>Ottimo per la gestione metabolica con il caldo. Consiglio: aggiungere sale/zucchero.</td>
+                </tr>
             </tbody>
         </table>
     </div>
 </div>
+
+<!-- Logica JavaScript per il filtraggio istantaneo -->
+<script>
+    const searchFilter = document.getElementById('searchFilter');
+    const weekFilter = document.getElementById('weekFilter');
+    const dayFilter = document.getElementById('dayFilter');
+    const tagFilter = document.getElementById('tagFilter');
+    const tableRows = document.querySelectorAll('#trackerTable tbody tr');
+
+    function filterTable() {
+        const searchText = searchFilter.value.toLowerCase();
+        const selectedWeek = weekFilter.value;
+        const selectedDay = dayFilter.value;
+        const selectedTag = tagFilter.value;
+
+        tableRows.forEach(row => {
+            const rowText = row.textContent.toLowerCase();
+            const rowWeek = row.getAttribute('data-week');
+            const rowDay = row.getAttribute('data-day');
+            const rowTag = row.getAttribute('data-tag');
+
+            const matchesSearch = rowText.includes(searchText);
+            const matchesWeek = selectedWeek === 'all' || rowWeek === selectedWeek;
+            const matchesDay = selectedDay === 'all' || rowDay === selectedDay;
+            const matchesTag = selectedTag === 'all' || rowTag === selectedTag;
+
+            if (matchesSearch && matchesWeek && matchesDay && matchesTag) {
+                row.classList.remove('hidden');
+            } else {
+                row.classList.add('hidden');
+            }
+        });
+    }
+
+    searchFilter.addEventListener('input', filterTable);
+    weekFilter.addEventListener('change', filterTable);
+    dayFilter.addEventListener('change', filterTable);
+    tagFilter.addEventListener('change', filterTable);
+</script>
 
 </body>
 </html>
