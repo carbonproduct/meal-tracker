@@ -1,17 +1,71 @@
 const WEIGHT_DATA = [
-    { date: "Venerdì 26 Giugno 2026", weight: 69.1, note: "Pre-diet baseline" }
+    { 
+        date: "Mercoledì 8 Luglio 2026", 
+        weight: 68.8,
+        metrics: {
+            bmi: 21.2,
+            fatPct: 16.1,       // % Grasso corporeo
+            fatMassKg: 11.1,    // Massa grassa in kg
+            musclePct: 79.6,    // % Massa muscolare della composizione
+            muscleMassKg: 54.8, // Massa muscolare totale in kg
+            leanMassKg: 57.7,   // Massa magra complessiva in kg
+            waterPct: 57.6,     // Percentuale acqua %
+            visceralFat: 8.0,   // Grasso viscerale / addominale
+            boneMassKg: 2.9,    // Massa ossea in kg
+            bonePct: 4.3,       // Percentuale massa ossea
+            bmr: 1477           // Metabolismo basale espresso in kcal
+        },
+        nutritionistNotes: {
+            status: "Ricomposizione Corporea Positiva",
+            considerations: "Il calo ponderale (-0.3 kg) non è perdita muscolare. I dati evidenziano un'eccellente sgrassatura selettiva (riduzione della massa grassa e del grasso addominale) preservando e ottimizzando la percentuale di tessuto contrattile.",
+            strategy: "Continuare con la dieta isocalorica ad alto volume e cibi ancestrali. Monitorare la digestione. Se il peso scende sotto i 68.5 kg, incrementare la quota di carboidrati complessi per evitare deficit energetici eccessivi dovuti al pendolarismo in bici e alle 3 sessioni di pesi."
+        },
+        userNotes: "Sensazione netta di riduzione del grasso addominale inserito nelle scorse settimane. Ottimo feedback visivo allo specchio: più muscoloso, denso e tirato. L'allenamento intenso (bici + palestra + rower) sta pagando."
+    },
+    { 
+        date: "Venerdì 26 Giugno 2026", 
+        weight: 69.1, 
+        metrics: {
+            bmi: 21.3,
+            fatPct: 16.8, 
+            fatMassKg: 11.6,
+            musclePct: 78.9,
+            muscleMassKg: 54.5,
+            leanMassKg: 57.5,
+            waterPct: 57.1,
+            visceralFat: 8.5,
+            boneMassKg: 2.9,
+            bonePct: 4.2,
+            bmr: 1485
+        },
+        nutritionistNotes: {
+            status: "Baseline Iniziale",
+            considerations: "Fissazione dei parametri antropometrici di partenza del piano alimentare.",
+            strategy: "Adattamento metabolico al volume dei pasti senza ricorrere a integratori artificiali."
+        },
+        userNotes: "Peso pre-dieta registrato prima delle modifiche strutturali ai pasti." 
+    }
 ];
 
 const JOURNAL_DATA = [
+    {
+        date: "Mercoledì 8 Luglio 2026",
+        week: "W2",
+        sortDate: "2026-07-08",
+        meals: [
+            { tag: "Idratazione", slot: "Idratazione", content: "In corso...", status: "In corso", notes: "Monitorare i liquidi visto l'allenamento in palestra programmato." },
+            { tag: "Attività", slot: "Attività", content: "Sessione in palestra pomeridiana", status: "Pianificato", notes: "Quarto giorno consecutivo. Focus su sovraccarichi per stimolare la crescita muscolare." }
+        ]
+    },
     {
         date: "Martedì 7 Luglio 2026",
         week: "W2",
         sortDate: "2026-07-07",
         meals: [
-            { tag: "Colazione", slot: "Colazione", content: "Frutta secca consigliata + 3 caffè", status: "Perfetto", notes: "Quota grassi sani mattutina coperta." },
-            { tag: "Pranzo", slot: "Pranzo", content: "Pasta al burro + 240g bastoncini di merluzzo", status: "Flessibile", notes: "Fonte proteica magra da merluzzo. Assenza di verdure a pranzo." },
-            { tag: "Merenda", slot: "Merenda", content: "1 banana + 1 pacchetto di crackers al cheddar (3.4g proteine)", status: "Flessibile", notes: "Piccolo snack salato di prova + dose di frutta pomeridiana." },
-            { tag: "Cena", slot: "Cena", content: "Piatto unico abbondante: Pasta con abbondanti ceci, spinaci, salsa di pomodoro e olio EVO", status: "Ottimo", notes: "Rispettate perfettamente tutte le quantità. Eccellente apporto proteico da legumi e alta quota micronutrienti." }
+            { tag: "Colazione", slot: "Colazione", content: "3 caffè, quota di frutta secca consigliata", status: "Perfetto", notes: "Abitudine della frutta secca mattutina consolidata con successo." },
+            { tag: "Pranzo", slot: "Pranzo", content: "Pasta in bianco con burro + 240g bastoncini di merluzzo (fish fingers)", status: "Flessibile", notes: "Assenza di verdure a pranzo compensata alla grande a cena. Ottima quota proteica dal merluzzo (panatura leggera ideale per il surplus di massa)." },
+            { tag: "Merenda", slot: "Merenda", content: "1 banana + 1 pacchetto piccolo di cracker al cheddar (~3.4g proteine)", status: "Flessibile", notes: "Crackers usati come test energetico pomeridiano." },
+            { tag: "Cena", slot: "Cena (Pasto Unico)", content: "Maxi porzione di pasta con abbondanti ceci, tonnellate di spinaci, salsa di pomodoro e olio EVO", status: "Perfetto", notes: "Pasto unico immenso che raggruppa tutti i macro serali previsti. Ottimo volume di verdure e ottima combinazione di carboidrati e proteine vegetali dai ceci." }
         ]
     },
     {
@@ -35,65 +89,7 @@ const JOURNAL_DATA = [
             { tag: "Colazione", slot: "Colazione", content: "2 caffè, 1 fetta di pane con burro", status: "Flessibile", notes: "Rientro controllato nella routine casalinga." },
             { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante la giornata", status: "Perfetto", notes: "Target idratazione di 2.5L pienamente supportato." },
             { tag: "Attività", slot: "Attività", content: "1 pinta di birra + sessione di ciclismo e camminata", status: "Attivo", notes: "Alcol ampiamente bilanciato dall'attività cardiovascolare in bicicletta." },
-            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo inteligente degli avanzi. Uova inserite come switch proteico serale." }
-        ]
-    },
-    {
-        date: "Venerdì 3 Luglio 2026",
-        week: "W1",
-        sortDate: "2026-07-03",
-        meals: [
-            { tag: "Colazione", slot: "Colazione", content: "2 caffè", status: "Mancato", notes: "Pasto mattutino e frutta secca saltati." },
-            { tag: "Pranzo", slot: "Pranzo", content: "~110g riso e farro, petto di pollo a cubetti, verdure verdi miste", status: "Perfetto", notes: "Il petto di pollo rappresenta la fonte magra ideale. Ottimo rientro nel piano." },
-            { tag: "Merenda", slot: "Merenda", content: "1 banana, 2 caffè, caramelle", status: "Flessibile", notes: "Caramelle utilizzate come boost energetico rapido durante il viaggio (80/20)." },
-            { tag: "Cena", slot: "Cena", content: "Sandwich (2 cosce di pollo, formaggio, insalata), pannocchia, patatine, 1 birra", status: "Approvato", notes: "Cosce di pollo esplicitamente permesse nelle note del piano del nutrizionista." }
-        ]
-    },
-    {
-        date: "Giovedì 2 Luglio 2026",
-        week: "W1",
-        sortDate: "2026-07-02",
-        meals: [
-            { tag: "Colazione", slot: "Colazione", content: "1 caffè", status: "Mancato", notes: "Saltata la colazione e la quota di frutta secca." },
-            { tag: "Pranzo", slot: "Pranzo", content: "2 quesadillas (manzo e formaggio), 1 birra, acqua", status: "Regola 80/20", notes: "Viaggio a Berlino. Ottimo surplus calorico per la massa." },
-            { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Spuntino pomeridiano con frutta eseguito con successo." },
-            { tag: "Cena", slot: "Cena", content: "Insalata mista, pasta ripiena di gamberi, avocado, menta, parmigiano e finferli, 1 birra grande", status: "Ottimo", notes: "Avocado e parmigiano usati efficacemente come sostituti dei grassi (EVO)." },
-            { tag: "Attività", slot: "Attività", content: "Lunga camminata post-cena + 1 birra grande + 1 piccola", status: "Attivo", notes: "Ottimo movimento per stimolare il metabolismo (Target di 10.000 passi)." }
-        ]
-    },
-    {
-        date: "Mercoledì 1 Luglio 2026",
-        week: "W1",
-        sortDate: "2026-07-01",
-        meals: [
-            { tag: "Colazione", slot: "Colazione", content: "1 caffè, frutta secca", status: "Perfetto", notes: "Target frutta secca rispettato." },
-            { tag: "Pranzo", slot: "Pranzo", content: "1 bratwurst, un pezzetto di pane, una porzione di patatine", status: "Regola 80/20", notes: "Viaggio a Berlino. Rientra perfettamente nel 20% di flessibilità concesso." },
-            { tag: "Cena", slot: "Cena", content: "80g manzo, 6 ravioli gamberi/verdure, Bibimbap bowl (80g riso, tonno, 1 uovo, verdure miste)", status: "Ottimo", notes: "Eccellente varietà di micronutrienti e proteine. Raggiunti i 200g di verdure." },
-            { tag: "Extra", slot: "Extra", content: "20g semi di girasole tostati", status: "Flessibile", notes: "Ottima fonte extra di grassi sani nel post-cena." }
-        ]
-    },
-    {
-        date: "Martedì 30 Giugno 2026",
-        week: "W1",
-        sortDate: "2026-06-30",
-        meals: [
-            { tag: "Colazione", slot: "Colazione", content: "Anacardi, pistacchi, 3 caffè", status: "Perfetto", notes: "Coperta ottimamente la quota di 30g di frutta secca mattutina." },
-            { tag: "Pranzo", slot: "Pranzo", content: "Pasta al pomodoro, bastoncini di merluzzo, insalata, olio EVO", status: "Flessibile", notes: "Carboidrati e verdure ok. I bastoncini aggiungono quota grassi/carbo da panatura." },
-            { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Quota frutta parzialmente coperta." },
-            { tag: "Cena", slot: "Cena", content: "Piccola pizza, 3 uova, spinaci, insalata verde, olio EVO", status: "Flessibile", notes: "3 uova come ottimo sostituto proteico. Pizza come sostituto dei carboidrati." }
-        ]
-    },
-    {
-        date: "Lunedì 29 Giugno 2026",
-        week: "W1",
-        sortDate: "2026-06-29",
-        meals: [
-            { tag: "Colazione", slot: "Colazione", content: "1 fetta di pane con burro, 3 caffè", status: "Flessibile", notes: "Carboidrati inseriti correttamente nei macro giornalieri." },
-            { tag: "Spuntino", slot: "Spuntino", content: "Spuntino saltato", status: "Mancato", notes: "Mancata la quota di 30g di frutta secca." },
-            { tag: "Pranzo", slot: "Pranzo", content: "150g pasta, zucchine, gamberi, merluzzo, olio EVO", status: "Perfetto", notes: "Esatti 150g di pasta. Ottimo mix di fonti proteiche." },
-            { tag: "Merenda", slot: "Merenda", content: "2 banane", status: "Perfetto", notes: "Sfruttata la quota frutta giornaliera (2 frutti medi)." },
-            { tag: "Cena", slot: "Cena", content: "Pasta, salsa di pomodoro, merluzzo", status: "Perfetto", notes: "Linee guida della cena rispettate appieno." },
-            { tag: "Extra", slot: "Extra", content: "100g pistacchi", status: "Surplus", notes: "Bonus calorico consistente (~560 kcal), utile per la massa ma quota grassi alta." }
+            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite come switch proteico serale." }
         ]
     }
 ];
