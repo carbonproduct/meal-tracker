@@ -263,9 +263,7 @@
                         <th>Variazione Totale Diet</th>
                     </tr>
                 </thead>
-                <tbody id="weightTableBody">
-                    <!-- Loaded dynamically via script -->
-                </tbody>
+                <tbody id="weightTableBody"></tbody>
             </table>
         </div>
     </div>
@@ -299,113 +297,10 @@
     <div id="journalContainer"></div>
 </div>
 
+<!-- EXTERNAL DATA SOURCE FILE -->
+<script src="data.js"></script>
+
 <script>
-    // ==========================================
-    // 1. DATA SOURCE BLOCK (Update only this!)
-    // ==========================================
-    
-    const WEIGHT_DATA = [
-        { date: "Venerdì 26 Giugno 2026", weight: 69.1, note: "Pre-diet baseline" }
-    ];
-
-    const JOURNAL_DATA = [
-        {
-            date: "Lunedì 29 Giugno 2026",
-            week: "W1",
-            sortDate: "2026-06-29",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "1 fetta di pane con burro, 3 caffè", status: "Flessibile", notes: "Carboidrati inseriti correttamente nei macro giornalieri." },
-                { tag: "Spuntino", slot: "Spuntino", content: "Spuntino saltato", status: "Mancato", notes: "Mancata la quota di 30g di frutta secca." },
-                { tag: "Pranzo", slot: "Pranzo", content: "150g pasta, zucchine, gamberi, merluzzo, olio EVO", status: "Perfetto", notes: "Esatti 150g di pasta. Ottimo mix di fonti proteiche." },
-                { tag: "Merenda", slot: "Merenda", content: "2 banane", status: "Perfetto", notes: "Sfruttata la quota frutta giornaliera (2 frutti medi)." },
-                { tag: "Cena", slot: "Cena", content: "Pasta, salsa di pomodoro, merluzzo", status: "Perfetto", notes: "Linee guida della cena rispettate appieno." },
-                { tag: "Extra", slot: "Extra", content: "100g pistacchi", status: "Surplus", notes: "Bonus calorico consistente (~560 kcal), utile per la massa ma quota grassi alta." }
-            ]
-        },
-        {
-            date: "Martedì 30 Giugno 2026",
-            week: "W1",
-            sortDate: "2026-06-30",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "Anacardi, pistacchi, 3 caffè", status: "Perfetto", notes: "Coperta ottimamente la quota di 30g di frutta secca mattutina." },
-                { tag: "Pranzo", slot: "Pranzo", content: "Pasta al pomodoro, bastoncini di merluzzo, insalata, olio EVO", status: "Flessibile", notes: "Carboidrati e verdure ok. I bastoncini aggiungono quota grassi/carbo da panatura." },
-                { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Quota frutta parzialmente coperta." },
-                { tag: "Cena", slot: "Cena", content: "Piccola pizza, 3 uova, spinaci, insalata verde, olio EVO", status: "Flessibile", notes: "3 uova come ottimo sostituto proteico. Pizza come sostituto dei carboidrati." }
-            ]
-        },
-        {
-            date: "Mercoledì 1 Luglio 2026",
-            week: "W1",
-            sortDate: "2026-07-01",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "1 caffè, frutta secca", status: "Perfetto", notes: "Target frutta secca rispettato." },
-                { tag: "Pranzo", slot: "Pranzo", content: "1 bratwurst, un pezzetto di pane, una porzione di patatine", status: "Regola 80/20", notes: "Viaggio a Berlino. Rientra perfettamente nel 20% di flessibilità concesso." },
-                { tag: "Cena", slot: "Cena", content: "80g manzo, 6 ravioli gamberi/verdure, Bibimbap bowl (80g riso, tonno, 1 uovo, verdure miste)", status: "Ottimo", notes: "Eccellente varietà di micronutrienti e proteine. Raggiunti i 200g di verdure." },
-                { tag: "Extra", slot: "Extra", content: "20g semi di girasole tostati", status: "Flessibile", notes: "Ottima fonte extra di grassi sani nel post-cena." }
-            ]
-        },
-        {
-            date: "Giovedì 2 Luglio 2026",
-            week: "W1",
-            sortDate: "2026-07-02",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "1 caffè", status: "Mancato", notes: "Saltata la colazione e la quota di frutta secca." },
-                { tag: "Pranzo", slot: "Pranzo", content: "2 quesadillas (manzo e formaggio), 1 birra, acqua", status: "Regola 80/20", notes: "Viaggio a Berlino. Ottimo surplus calorico per la massa." },
-                { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Spuntino pomeridiano con frutta eseguito con successo." },
-                { tag: "Cena", slot: "Cena", content: "Insalata mista, pasta ripiena di gamberi, avocado, menta, parmigiano e finferli, 1 birra grande", status: "Ottimo", notes: "Avocado e parmigiano usati efficacemente come sostituti dei grassi (EVO)." },
-                { tag: "Attività", slot: "Attività", content: "Lunga camminata post-cena + 1 birra grande + 1 piccola", status: "Attivo", notes: "Ottimo movimento per stimolare il metabolismo (Target di 10.000 passi)." }
-            ]
-        },
-        {
-            date: "Venerdì 3 Luglio 2026",
-            week: "W1",
-            sortDate: "2026-07-03",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "2 caffè", status: "Mancato", notes: "Pasto mattutino e frutta secca saltati." },
-                { tag: "Pranzo", slot: "Pranzo", content: "~110g riso e farro, petto di pollo a cubetti, verdure verdi miste", status: "Perfetto", notes: "Il petto di pollo rappresenta la fonte magra ideale. Ottimo rientro nel piano." },
-                { tag: "Merenda", slot: "Merenda", content: "1 banana, 2 caffè, caramelle", status: "Flessibile", notes: "Caramelle utilizzate come boost energetico rapido durante il viaggio (80/20)." },
-                { tag: "Cena", slot: "Cena", content: "Sandwich (2 cosce di pollo, formaggio, insalata), pannocchia, patatine, 1 birra", status: "Approvato", notes: "Cosce di pollo esplicitamente permesse nelle note del piano del nutrizionista." }
-            ]
-        },
-        {
-            date: "Sabato 4 Luglio 2026",
-            week: "W1",
-            sortDate: "2026-07-04",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "Caffè, anacardi", status: "Perfetto", notes: "Target frutta secca mattutina centrato appieno." },
-                { tag: "Pranzo", slot: "Pranzo", content: "Brunch: 2 uova, pane, 2 hash browns, 2 bacon, burro, patatine, molta acqua", status: "Mass Fuel", notes: "Uova come ottima base proteica. Ottimo apporto di liquidi." },
-                { tag: "Merenda", slot: "Merenda", content: "1 banana, 3 bicchieri di vino, patatine condivise", status: "Regola 80/20", notes: "Gestione flessibile del weekend e della convivialità." },
-                { tag: "Cena", slot: "Cena", content: "150g risotto ai frutti di mare, vino, molta acqua", status: "Perfetto", notes: "Centrato quasi al grammo il target dei carboidrati serali (~160g riso)." }
-            ]
-        },
-        {
-            date: "Domenica 5 Luglio 2026",
-            week: "W2",
-            sortDate: "2026-07-05",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "2 caffè, 1 fetta di pane con burro", status: "Flessibile", notes: "Rientro controllato nella routine casalinga." },
-                { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante la giornata", status: "Perfetto", notes: "Target idratazione di 2.5L pienamente supportato." },
-                { tag: "Attività", slot: "Attività", content: "1 pinta di birra + sessione di ciclismo e camminata", status: "Attivo", notes: "Alcol ampiamente bilanciato dall'attività cardiovascolare in bicicletta." },
-                { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite come switch proteico serale." }
-            ]
-        },
-        {
-            date: "Lunedì 6 Luglio 2026",
-            week: "W2",
-            sortDate: "2026-07-06",
-            meals: [
-                { tag: "Colazione", slot: "Colazione", content: "3 caffè, 10g semi di girasole, 20g anacardi", status: "Perfetto", notes: "Raggiunto con precisione il target di 30g di frutta secca/semi mattutini." },
-                { tag: "Pranzo", slot: "Pranzo", content: "150g pasta con 250g zucchine + 1/3 tortilla de patata (2 uova, patate)", status: "Perfetto", notes: "Centrato perfettamente l'obiettivo di 150g di pasta e l'alto volume di verdure (250g)." },
-                { tag: "Idratazione", slot: "Idratazione", content: "~0.8L di acqua (Primo pomeriggio)", status: "In Corso", notes: "Circa 1/3 del target giornaliero completato; previsto recupero idrico in bici." },
-                { tag: "Attività", slot: "Attività", content: "Pianificata 1 ora di ciclismo nel pomeriggio", status: "Pianificato", notes: "Ottimo per la gestione metabolica con il caldo. Consiglio: aggiungere sale/zucchero." }
-            ]
-        }
-    ];
-
-    // ==========================================
-    // 2. RENDERING AND LOGIC ENGINE
-    // ==========================================
-
     function toggleWeight() {
         const historyDiv = document.getElementById('weightHistory');
         const btn = document.getElementById('toggleWeightBtn');
@@ -419,43 +314,31 @@
     }
 
     function renderWeightWidget() {
-        if (WEIGHT_DATA.length === 0) return;
-        
-        // Sort weight from newest to oldest
+        if (typeof WEIGHT_DATA === 'undefined' || WEIGHT_DATA.length === 0) return;
         const sortedWeights = [...WEIGHT_DATA].reverse();
         const baseWeight = WEIGHT_DATA[0].weight; 
-        
-        // Render latest info
         const latest = sortedWeights[0];
         document.getElementById('latestWeightDisplay').textContent = `${latest.weight.toFixed(1)} kg`;
         document.getElementById('latestWeightDate').textContent = `(${latest.date.split(' ')[1]} ${latest.date.split(' ')[2]})`;
         
-        // Build table rows
         const tableBody = document.getElementById('weightTableBody');
         tableBody.innerHTML = '';
-        
-        sortedWeights.forEach((entry, idx) => {
+        sortedWeights.forEach(entry => {
             const tr = document.createElement('tr');
             const totalDiff = entry.weight - baseWeight;
             let diffText = "Inizio";
             let diffClass = "";
-            
             if (entry.weight !== baseWeight) {
                 diffText = totalDiff >= 0 ? `+${totalDiff.toFixed(1)} kg` : `${totalDiff.toFixed(1)} kg`;
                 if (totalDiff > 0) diffClass = "trend-up";
             }
-            
-            tr.innerHTML = `
-                <td>${entry.date}</td>
-                <td><strong>${entry.weight.toFixed(1)} kg</strong></td>
-                <td class="${diffClass}">${diffText}</td>
-            `;
+            tr.innerHTML = `<td>${entry.date}</td><td><strong>${entry.weight.toFixed(1)} kg</strong></td><td class="${diffClass}">${diffText}</td>`;
             tableBody.appendChild(tr);
         });
     }
 
     function renderJournal() {
-        // Sort descending by sortDate field
+        if (typeof JOURNAL_DATA === 'undefined' || JOURNAL_DATA.length === 0) return;
         const sortedJournal = [...JOURNAL_DATA].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
         const container = document.getElementById('journalContainer');
         container.innerHTML = '';
@@ -466,13 +349,7 @@
             block.setAttribute('data-week', day.week);
             block.setAttribute('data-date', day.date);
             
-            let html = `
-                <div class="day-header">
-                    <span>Data: ${day.date}</span>
-                    <span class="week-tag">${day.week}</span>
-                </div>
-            `;
-            
+            let html = `<div class="day-header"><span>Data: ${day.date}</span><span class="week-tag">${day.week}</span></div>`;
             day.meals.forEach(meal => {
                 const badgeClass = `badge-${meal.status.toLowerCase().replace(/ /g, '-')}`;
                 html += `
@@ -481,29 +358,22 @@
                         <div class="meal-content">${meal.content}</div>
                         <div><span class="badge ${badgeClass}">${meal.status}</span></div>
                         <div class="meal-notes">${meal.notes}</div>
-                    </div>
-                `;
+                    </div>`;
             });
-            
             block.innerHTML = html;
             container.appendChild(block);
         });
     }
 
     function setupFilters() {
+        if (typeof JOURNAL_DATA === 'undefined') return;
         const weeks = Array.from(new Set(JOURNAL_DATA.map(d => d.week))).sort();
-        // Unique dates matching the dynamic sorted order
         const sortedDates = [...JOURNAL_DATA].sort((a,b) => new Date(b.sortDate) - new Date(a.sortDate)).map(d => d.date);
         const tags = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Idratazione", "Attività", "Extra"];
         
-        const weekGroup = document.getElementById('weekCheckboxGroup');
-        weekGroup.innerHTML = weeks.map(w => `<label class="checkbox-label"><input type="checkbox" class="week-checkbox" value="${w}" checked> ${w}</label>`).join('');
-        
-        const dateGroup = document.getElementById('dateCheckboxGroup');
-        dateGroup.innerHTML = sortedDates.map(d => `<label class="checkbox-label"><input type="checkbox" class="date-checkbox" value="${d}" checked> ${d.split(' ')[1]} ${d.split(' ')[2]}</label>`).join('');
-        
-        const tagGroup = document.getElementById('tagCheckboxGroup');
-        tagGroup.innerHTML = tags.map(t => `<label class="checkbox-label"><input type="checkbox" class="tag-checkbox" value="${t}" checked> ${t}</label>`).join('');
+        document.getElementById('weekCheckboxGroup').innerHTML = weeks.map(w => `<label class="checkbox-label"><input type="checkbox" class="week-checkbox" value="${w}" checked> ${w}</label>`).join('');
+        document.getElementById('dateCheckboxGroup').innerHTML = sortedDates.map(d => `<label class="checkbox-label"><input type="checkbox" class="date-checkbox" value="${d}" checked> ${d.split(' ')[1]} ${d.split(' ')[2]}</label>`).join('');
+        document.getElementById('tagCheckboxGroup').innerHTML = tags.map(t => `<label class="checkbox-label"><input type="checkbox" class="tag-checkbox" value="${t}" checked> ${t}</label>`).join('');
     }
 
     function applyFilters() {
@@ -515,45 +385,28 @@
         document.querySelectorAll('.day-block').forEach(block => {
             const blockWeek = block.getAttribute('data-week');
             const blockDate = block.getAttribute('data-date');
-            const mealRows = block.querySelectorAll('.meal-row');
             let visibleRowsInBlock = 0;
 
-            mealRows.forEach(row => {
-                const rowTag = row.getAttribute('data-tag');
-                const rowText = row.textContent.toLowerCase();
-
-                const matchesSearch = rowText.includes(searchText);
-                const matchesWeek = activeWeeks.includes(blockWeek);
-                const matchesDate = activeDates.includes(blockDate);
-                const matchesTag = activeTags.includes(rowTag);
-
-                if (matchesSearch && matchesWeek && matchesDate && matchesTag) {
+            block.querySelectorAll('.meal-row').forEach(row => {
+                const matchesSearch = row.textContent.toLowerCase().includes(searchText);
+                if (matchesSearch && activeWeeks.includes(blockWeek) && activeDates.includes(blockDate) && activeTags.includes(row.getAttribute('data-tag'))) {
                     row.classList.remove('hidden');
                     visibleRowsInBlock++;
                 } else {
                     row.classList.add('hidden');
                 }
             });
-
-            if (visibleRowsInBlock > 0) {
-                block.classList.remove('hidden');
-            } else {
-                block.classList.add('hidden');
-            }
+            if (visibleRowsInBlock > 0) block.classList.remove('hidden'); else block.classList.add('hidden');
         });
     }
 
-    // Execution initialization
+    // Init Execution
     renderWeightWidget();
     renderJournal();
     setupFilters();
 
-    // Event Bindings
     document.getElementById('searchFilter').addEventListener('input', applyFilters);
-    document.querySelectorAll('.week-checkbox').forEach(cb => cb.addEventListener('change', applyFilters));
-    document.querySelectorAll('.tag-checkbox').forEach(cb => cb.addEventListener('change', applyFilters));
-    document.querySelectorAll('.date-checkbox').forEach(cb => cb.addEventListener('change', applyFilters));
+    document.addEventListener('change', e => { if(e.target.matches('.week-checkbox, .date-checkbox, .tag-checkbox')) applyFilters(); });
 </script>
-
 </body>
 </html>
