@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Claudio C. - Diario Alimentare</title>
+    <title>Claudio C. - Diario Alimentare & Composizione Corporea</title>
     <style>
         :root {
             --primary: #2e7d32;
@@ -24,7 +24,7 @@
             padding: 15px;
         }
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             margin: 0 auto;
             background: #fff;
             padding: 20px;
@@ -44,12 +44,11 @@
         h1 { margin: 0; color: var(--primary); font-size: 22px; }
         .meta-info { font-size: 13px; color: #666; }
         
-        /* Weight Tracker Widget */
         .weight-dashboard {
             background: var(--accent-light);
             border: 1px solid #bbdefb;
             border-radius: 8px;
-            padding: 12px 15px;
+            padding: 15px;
             margin-bottom: 25px;
         }
         .weight-summary {
@@ -60,46 +59,49 @@
             gap: 10px;
         }
         .weight-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: bold;
             color: var(--accent);
-            display: flex;
-            align-items: center;
-            gap: 6px;
         }
         .weight-btn {
             background: var(--accent);
             color: white;
             border: none;
-            padding: 5px 12px;
+            padding: 6px 14px;
             border-radius: 4px;
             font-size: 12px;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
         }
-        .weight-btn:hover { background: #0d47a1; }
         .weight-history {
             display: none;
-            margin-top: 12px;
+            margin-top: 15px;
             border-top: 1px solid #bbdefb;
-            padding-top: 10px;
+            padding-top: 15px;
+            overflow-x: auto;
         }
         .weight-table {
             width: 100%;
-            max-width: 450px;
             border-collapse: collapse;
-            font-size: 13px;
+            font-size: 12px;
+            min-width: 800px;
         }
-        .weight-table th, .weight-table td {
-            padding: 6px 10px;
+        .weight-table th {
+            background-color: #d2e8fc;
+            color: #0d47a1;
+            padding: 8px;
             text-align: left;
+            font-weight: bold;
         }
-        .weight-table th { color: #555; font-weight: bold; }
-        .weight-table tr:not(:last-child) { border-bottom: 1px solid #e0e0e0; }
+        .weight-table td {
+            padding: 8px;
+            border-bottom: 1px solid #e0e0e0;
+            vertical-align: top;
+        }
+        .text-small { font-size: 11px; color: #555; line-height: 1.3; }
         .trend-up { color: #2e7d32; font-weight: bold; }
+        .trend-down { color: #c62828; font-weight: bold; }
 
-        /* Filters Section */
         .filters-container {
             background: #fcfcfc;
             border: 1px solid #ddd;
@@ -110,16 +112,7 @@
             flex-direction: column;
             gap: 15px;
         }
-        .search-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-        .search-group label {
-            font-size: 12px;
-            font-weight: bold;
-            color: #444;
-        }
+        .search-group { display: flex; flex-direction: column; gap: 5px; }
         .search-group input {
             width: 75%;
             max-width: 600px;
@@ -129,13 +122,7 @@
             font-size: 14px;
             outline: none;
         }
-        .search-group input:focus { border-color: var(--primary); }
-
-        .multi-select-container {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
+        .multi-select-container { display: flex; gap: 20px; flex-wrap: wrap; }
         .filter-box {
             flex: 1;
             min-width: 200px;
@@ -162,16 +149,13 @@
             margin-bottom: 6px;
             cursor: pointer;
         }
-        .checkbox-label input { cursor: pointer; }
 
-        /* Day Block Structure */
         .day-block {
             background: #fff;
             border: 3px solid var(--border-thick);
             border-radius: 8px;
             margin-bottom: 25px;
             overflow: hidden;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
         }
         .day-header {
             background-color: var(--primary-light);
@@ -207,7 +191,6 @@
         
         .day-block.hidden, .meal-row.hidden { display: none !important; }
 
-        /* Status Badges */
         .badge {
             display: inline-block;
             padding: 4px 6px;
@@ -224,11 +207,7 @@
         .badge-surplus, .badge-mass-fuel { background-color: #ffe0b2; color: #e65100; }
 
         @media (max-width: 768px) {
-            .meal-row {
-                grid-template-columns: 1fr;
-                gap: 5px;
-                padding: 12px;
-            }
+            .meal-row { grid-template-columns: 1fr; gap: 5px; padding: 12px; }
             .search-group input { width: 100%; }
         }
     </style>
@@ -239,28 +218,31 @@
     <header>
         <div>
             <h1>Piano alimentare di Claudio 🏋🏽</h1>
-            <div class="meta-info">Obiettivo: Aumento Massa Muscolare (2300 kcal)</div>
+            <div class="meta-info">Obiettivo: Aumento Massa Muscolare (Piano Isocalorico / Massa)</div>
         </div>
-        <div class="meta-info" style="text-align: right;">
-            <strong>File di riferimento:</strong> Piano alimentare Claudio C.pdf
-        </div>
+        <div class="meta-info" style="text-align: right;">Rif: Composizione Corporea Avanzata</div>
     </header>
 
-    <!-- Weight Dashboard Widget -->
+    <!-- DASHBOARD COMPOSIZIONE CORPOREA POTENZIATA -->
     <div class="weight-dashboard">
         <div class="weight-summary">
             <div class="weight-title">
-                ⚖️ Ultimo Peso Rilevato: <strong id="latestWeightDisplay" style="font-size: 16px; margin-left: 5px; color: #0d47a1;">-- kg</strong> <span id="latestWeightDate" style="font-size: 12px; color: #555; font-weight: normal;"></span>
+                ⚖️ Ultimo Rilevamento: <strong id="latestWeightDisplay" style="font-size: 18px; color: #0d47a1;">-- kg</strong> 
+                <span id="latestWeightMeta" style="font-size: 13px; color: #445; margin-left: 10px;"></span>
             </div>
-            <button class="weight-btn" id="toggleWeightBtn" onclick="toggleWeight()">Mostra Storico</button>
+            <button class="weight-btn" id="toggleWeightBtn" onclick="toggleWeight()">Mostra Storico Antropometrico</button>
         </div>
         <div class="weight-history" id="weightHistory">
             <table class="weight-table">
                 <thead>
                     <tr>
                         <th>Data</th>
-                        <th>Peso</th>
-                        <th>Variazione Totale Diet</th>
+                        <th>Peso (IMC)</th>
+                        <th>Grasso (Tot / Addominale)</th>
+                        <th>Muscolo & Magra</th>
+                        <th>Acqua / BMR</th>
+                        <th>Considerazioni Nutrizionista</th>
+                        <th>Note Claudio / Specchio</th>
                     </tr>
                 </thead>
                 <tbody id="weightTableBody"></tbody>
@@ -268,143 +250,122 @@
         </div>
     </div>
 
-    <!-- Filters Panel -->
     <div class="filters-container">
         <div class="search-group">
-            <label for="searchFilter">Cerca Alimento o Nota:</label>
-            <input type="text" id="searchFilter" placeholder="Scrivi qui per filtrare all'istante (es. uova, pollo, pasta...)">
+            <label for="searchFilter">Cerca Alimento, Nota o Etichetta:</label>
+            <input type="text" id="searchFilter" placeholder="Scrivi qui per filtrare i pasti (es. ceci, merluzzo, spinaci...)">
         </div>
-        
         <div class="multi-select-container">
-            <div class="filter-box">
-                <div class="filter-box-title">Settimana</div>
-                <div id="weekCheckboxGroup"></div>
-            </div>
-
-            <div class="filter-box">
-                <div class="filter-box-title">Date Disponibili</div>
-                <div id="dateCheckboxGroup"></div>
-            </div>
-
-            <div class="filter-box">
-                <div class="filter-box-title">Etichette Pasti</div>
-                <div id="tagCheckboxGroup"></div>
-            </div>
+            <div class="filter-box"><div class="filter-box-title">Settimana</div><div id="weekCheckboxGroup"></div></div>
+            <div class="filter-box"><div class="filter-box-title">Date Disponibili</div><div id="dateCheckboxGroup"></div></div>
+            <div class="filter-box"><div class="filter-box-title">Etichette Pasti</div><div id="tagCheckboxGroup"></div></div>
         </div>
     </div>
 
-    <!-- Journal Daily Blocks Container -->
     <div id="journalContainer"></div>
 </div>
 
-<!-- EXTERNAL DATA SOURCE FILE -->
 <script src="data.js"></script>
 
 <script>
     function toggleWeight() {
-        const historyDiv = document.getElementById('weightHistory');
+        const div = document.getElementById('weightHistory');
         const btn = document.getElementById('toggleWeightBtn');
-        if (historyDiv.style.display === 'block') {
-            historyDiv.style.display = 'none';
-            btn.textContent = 'Mostra Storico';
-        } else {
-            historyDiv.style.display = 'block';
-            btn.textContent = 'Nascondi';
-        }
+        if (div.style.display === 'block') { div.style.display = 'none'; btn.textContent = 'Mostra Storico Antropometrico'; }
+        else { div.style.display = 'block'; btn.textContent = 'Nascondi'; }
     }
 
     function renderWeightWidget() {
         if (typeof WEIGHT_DATA === 'undefined' || WEIGHT_DATA.length === 0) return;
-        const sortedWeights = [...WEIGHT_DATA].reverse();
-        const baseWeight = WEIGHT_DATA[0].weight; 
-        const latest = sortedWeights[0];
-        document.getElementById('latestWeightDisplay').textContent = `${latest.weight.toFixed(1)} kg`;
-        document.getElementById('latestWeightDate').textContent = `(${latest.date.split(' ')[1]} ${latest.date.split(' ')[2]})`;
+        const sorted = [...WEIGHT_DATA].sort((a,b) => new Date(b.date) - new Date(a.date)); // Semplice ordinamento per visualizzazione
+        const current = WEIGHT_DATA[0]; 
         
-        const tableBody = document.getElementById('weightTableBody');
-        tableBody.innerHTML = '';
-        sortedWeights.forEach(entry => {
-            const tr = document.createElement('tr');
-            const totalDiff = entry.weight - baseWeight;
-            let diffText = "Inizio";
-            let diffClass = "";
-            if (entry.weight !== baseWeight) {
-                diffText = totalDiff >= 0 ? `+${totalDiff.toFixed(1)} kg` : `${totalDiff.toFixed(1)} kg`;
-                if (totalDiff > 0) diffClass = "trend-up";
-            }
-            tr.innerHTML = `<td>${entry.date}</td><td><strong>${entry.weight.toFixed(1)} kg</strong></td><td class="${diffClass}">${diffText}</td>`;
-            tableBody.appendChild(tr);
-        });
+        document.getElementById('latestWeightDisplay').textContent = `${current.weight.toFixed(1)} kg`;
+        if (current.metrics) {
+            document.getElementById('latestWeightMeta').textContent = `| Muscolo: ${current.metrics.musclePct}% | Grasso: ${current.metrics.fatPct}% | Grasso Addominale: ${current.metrics.visceralFat}`;
+        }
+        
+        document.getElementById('weightTableBody').innerHTML = WEIGHT_DATA.map(entry => {
+            const m = entry.metrics || {};
+            const nut = entry.nutritionistNotes || { status: "-", considerations: "-", strategy: "-" };
+            
+            return `
+                <tr>
+                    <td><strong>${entry.date}</strong></td>
+                    <td><span style="font-size:13px; font-weight:bold;">${entry.weight} kg</span><br><span class="text-small">IMC: ${m.bmi || '--'}</span></td>
+                    <td>
+                        <span class="trend-down">⬇️ ${m.fatPct || '--'}%</span> (${m.fatMassKg || '--'} kg)<br>
+                        <span class="text-small">Addominale: ${m.visceralFat || '--'}</span>
+                    </td>
+                    <td>
+                        <span class="trend-up">⬆️ ${m.musclePct || '--'}%</span> (${m.muscleMassKg || '--'} kg)<br>
+                        <span class="text-small">Massa Magra: ${m.leanMassKg || '--'} kg</span>
+                    </td>
+                    <td>
+                        <span>💧 ${m.waterPct || '--'}%</span><br>
+                        <span class="text-small">BMR: ${m.bmr || '--'} kcal</span>
+                    </td>
+                    <td>
+                        <div style="font-weight:bold; color:var(--primary); font-size:11px;">${nut.status}</div>
+                        <div class="text-small" style="color:#222;">${nut.considerations}</div>
+                        <div class="text-small" style="font-style:italic; color:#555; margin-top:2px;">Target: ${nut.strategy}</div>
+                    </td>
+                    <td class="text-small" style="color:#444;">${entry.userNotes || '-'}</td>
+                </tr>
+            `;
+        }).join('');
     }
 
     function renderJournal() {
         if (typeof JOURNAL_DATA === 'undefined' || JOURNAL_DATA.length === 0) return;
-        const sortedJournal = [...JOURNAL_DATA].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
-        const container = document.getElementById('journalContainer');
-        container.innerHTML = '';
+        const sorted = [...JOURNAL_DATA].sort((a, b) => new Date(b.sortDate) - new Date(a.sortDate));
         
-        sortedJournal.forEach(day => {
-            const block = document.createElement('div');
-            block.className = 'day-block';
-            block.setAttribute('data-week', day.week);
-            block.setAttribute('data-date', day.date);
-            
-            let html = `<div class="day-header"><span>Data: ${day.date}</span><span class="week-tag">${day.week}</span></div>`;
-            day.meals.forEach(meal => {
-                const badgeClass = `badge-${meal.status.toLowerCase().replace(/ /g, '-')}`;
-                html += `
-                    <div class="meal-row" data-tag="${meal.tag}">
-                        <div class="meal-slot">${meal.slot}</div>
-                        <div class="meal-content">${meal.content}</div>
-                        <div><span class="badge ${badgeClass}">${meal.status}</span></div>
-                        <div class="meal-notes">${meal.notes}</div>
-                    </div>`;
-            });
-            block.innerHTML = html;
-            container.appendChild(block);
-        });
+        document.getElementById('journalContainer').innerHTML = sorted.map(day => `
+            <div class="day-block" data-week="${day.week}" data-date="${day.date}">
+                <div class="day-header"><span>Data: ${day.date}</span><span class="week-tag">${day.week}</span></div>
+                ${day.meals.map(m => `
+                    <div class="meal-row" data-tag="${m.tag}">
+                        <div class="meal-slot">${m.slot}</div>
+                        <div class="meal-content">${m.content}</div>
+                        <div><span class="badge badge-${m.status.toLowerCase().replace(/ /g, '-')}">${m.status}</span></div>
+                        <div class="meal-notes">${m.notes}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `).join('');
     }
 
     function setupFilters() {
         if (typeof JOURNAL_DATA === 'undefined') return;
         const weeks = Array.from(new Set(JOURNAL_DATA.map(d => d.week))).sort();
-        const sortedDates = [...JOURNAL_DATA].sort((a,b) => new Date(b.sortDate) - new Date(a.sortDate)).map(d => d.date);
+        const dates = [...JOURNAL_DATA].sort((a,b) => new Date(b.sortDate) - new Date(a.sortDate)).map(d => d.date);
         const tags = ["Colazione", "Spuntino", "Pranzo", "Merenda", "Cena", "Idratazione", "Attività", "Extra"];
         
         document.getElementById('weekCheckboxGroup').innerHTML = weeks.map(w => `<label class="checkbox-label"><input type="checkbox" class="week-checkbox" value="${w}" checked> ${w}</label>`).join('');
-        document.getElementById('dateCheckboxGroup').innerHTML = sortedDates.map(d => `<label class="checkbox-label"><input type="checkbox" class="date-checkbox" value="${d}" checked> ${d.split(' ')[1]} ${d.split(' ')[2]}</label>`).join('');
+        document.getElementById('dateCheckboxGroup').innerHTML = dates.map(d => `<label class="checkbox-label"><input type="checkbox" class="date-checkbox" value="${d}" checked> ${d.split(' ')[1]} ${d.split(' ')[2]}</label>`).join('');
         document.getElementById('tagCheckboxGroup').innerHTML = tags.map(t => `<label class="checkbox-label"><input type="checkbox" class="tag-checkbox" value="${t}" checked> ${t}</label>`).join('');
     }
 
     function applyFilters() {
-        const searchText = document.getElementById('searchFilter').value.toLowerCase();
-        const activeWeeks = Array.from(document.querySelectorAll('.week-checkbox:checked')).map(cb => cb.value);
-        const activeDates = Array.from(document.querySelectorAll('.date-checkbox:checked')).map(cb => cb.value);
-        const activeTags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map(cb => cb.value);
+        const text = document.getElementById('searchFilter').value.toLowerCase();
+        const weeks = Array.from(document.querySelectorAll('.week-checkbox:checked')).map(cb => cb.value);
+        const dates = Array.from(document.querySelectorAll('.date-checkbox:checked')).map(cb => cb.value);
+        const tags = Array.from(document.querySelectorAll('.tag-checkbox:checked')).map(cb => cb.value);
         
         document.querySelectorAll('.day-block').forEach(block => {
-            const blockWeek = block.getAttribute('data-week');
-            const blockDate = block.getAttribute('data-date');
-            let visibleRowsInBlock = 0;
-
+            let visible = 0;
             block.querySelectorAll('.meal-row').forEach(row => {
-                const matchesSearch = row.textContent.toLowerCase().includes(searchText);
-                if (matchesSearch && activeWeeks.includes(blockWeek) && activeDates.includes(blockDate) && activeTags.includes(row.getAttribute('data-tag'))) {
-                    row.classList.remove('hidden');
-                    visibleRowsInBlock++;
-                } else {
-                    row.classList.add('hidden');
-                }
+                if (row.textContent.toLowerCase().includes(text) && weeks.includes(block.getAttribute('data-week')) && dates.includes(block.getAttribute('data-date')) && tags.includes(row.getAttribute('data-tag'))) {
+                    row.classList.remove('hidden'); visible++;
+                } else { row.classList.add('hidden'); }
             });
-            if (visibleRowsInBlock > 0) block.classList.remove('hidden'); else block.classList.add('hidden');
+            if (visible > 0) block.classList.remove('hidden'); else block.classList.add('hidden');
         });
     }
 
-    // Init Execution
     renderWeightWidget();
     renderJournal();
     setupFilters();
-
     document.getElementById('searchFilter').addEventListener('input', applyFilters);
     document.addEventListener('change', e => { if(e.target.matches('.week-checkbox, .date-checkbox, .tag-checkbox')) applyFilters(); });
 </script>
