@@ -3,27 +3,50 @@
 // ==========================================
 const WEIGHT_DATA = [
     { 
+        date: "Sabato 18 Luglio 2026", 
+        weight: 69.6,
+        metrics: {
+            bmi: 21.5,
+            fatPct: 16.7,       // % Grasso corporeo
+            fatMassKg: 11.6,    // Massa grassa in kg
+            musclePct: 79.0,    // % Massa muscolare della composizione
+            muscleMassKg: 55.0, // Massa muscolare totale in kg
+            leanMassKg: 58.0,   // Massa magra complessiva in kg
+            waterPct: 57.1,     // Percentuale acqua %
+            visceralFat: 8.0,   // Grasso viscerale / addominale
+            boneMassKg: 3.0,    // Massa ossea in kg
+            bonePct: 4.2,       // Percentuale massa ossea
+            bmr: 1489           // Metabolismo basale espresso in kcal
+        },
+        nutritionistNotes: {
+            status: "Fase di Massa Efficace",
+            considerations: "Solido incremento ponderale (+0.8 kg rispetto all'ultimo controllo). L'aumento è trainato da un incremento netto sia della massa muscolare (+0.2 kg) che della massa magra generale, segno che il surplus calorico strutturato sta funzionando.",
+            strategy: "Mantenere le quote energetiche attuali. L'impatto dei pasti liberi ad alta densità ha supportato lo slancio senza intaccare la stabilità del grasso viscerale."
+        },
+        userNotes: "Peso in aumento controllato. Ottimo feeling di pienezza muscolare. I volumi calorici più alti e i cheat controllati del weekend stanno dando la spinta necessaria."
+    },
+    { 
         date: "Mercoledì 8 Luglio 2026", 
         weight: 68.8,
         metrics: {
             bmi: 21.2,
-            fatPct: 16.1,       // % Grasso corporeo
-            fatMassKg: 11.1,    // Massa grassa in kg
-            musclePct: 79.6,    // % Massa muscolare della composizione
-            muscleMassKg: 54.8, // Massa muscolare totale in kg
-            leanMassKg: 57.7,   // Massa magra complessiva in kg
-            waterPct: 57.6,     // Percentuale acqua %
-            visceralFat: 8.0,   // Grasso viscerale / addominale
-            boneMassKg: 2.9,    // Massa ossea in kg
-            bonePct: 4.3,       // Percentuale massa ossea
-            bmr: 1477           // Metabolismo basale espresso in kcal
+            fatPct: 16.1,
+            fatMassKg: 11.1,
+            musclePct: 79.6,
+            muscleMassKg: 54.8,
+            leanMassKg: 57.7,
+            waterPct: 57.6,
+            visceralFat: 8.0,
+            boneMassKg: 2.9,
+            bonePct: 4.3,
+            bmr: 1477
         },
         nutritionistNotes: {
             status: "Ricomposizione Corporea Positiva",
-            considerations: "Il calo ponderale (-0.3 kg) non è perdita muscolare. I dati evidenziano un'eccellente sgrassatura selettiva (riduzione della massa grassa e del grasso addominale) preservando e ottimizzando la percentuale di tessuto contrattile.",
-            strategy: "Continuare con la dieta isocalorica ad alto volume e cibi ancestrali. Monitorare la digestione. Se il peso scende sotto i 68.5 kg, incrementare la quota di carboidrati complessi per evitare deficit energetici eccessivi dovuti al pendolarismo in bici e alle 3 sessioni di pesi."
+            considerations: "I dati evidenziano un'eccellente sgrassatura selettiva preservando e ottimizzando la percentuale di tessuto contrattile.",
+            strategy: "Continuare con la dieta isocalorica ad alto volume e cibi ancestrali."
         },
-        userNotes: "Sensazione netta di riduzione del grasso addominale inserito nelle scorse settimane. Ottimo feedback visivo allo specchio: più muscoloso, denso e tirato. L'allenamento intenso (bici + palestra + rower) sta pagando."
+        userNotes: "Sensazione netta di riduzione del grasso addominale. Ottimo feedback visivo allo specchio: più muscoloso, denso e tirato."
     },
     { 
         date: "Venerdì 26 Giugno 2026", 
@@ -60,7 +83,7 @@ const JOURNAL_DATA = [
         sortDate: "2026-07-18",
         meals: [
             { tag: "Colazione", slot: "Colazione", content: "3 fette di pane con burro, origano e un pizzico di sale + 45g di mix (noci, semi di girasole, mandorle, senza anacardi)", status: "Perfetto", notes: "Ottimo l'incremento controllato della frutta secca a 45g, ideale per sostenere l'apporto calorico in massa con grassi sani." },
-            { tag: "Pranzo", slot: "Pranzo (In corso)", content: "Riso al forno con salsa di pomodoro, scorza di limone e abbondante parmigiano grattugiato", status: "Perfetto", notes: "Primo piatto denso, energetico e pulito. Ottimo l'uso della scorza di limone per la freschezza e la digestione." }
+            { tag: "Pranzo", slot: "Pranzo", content: "Riso al forno con salsa di pomodoro, scorza di limone e abbondante parmigiano grattugiato", status: "Perfetto", notes: "Primo piatto denso, energetico e pulito. Ottimo l'uso della scorza di limone per la freschezza e la digestione." }
         ]
     },
     {
@@ -106,7 +129,7 @@ const JOURNAL_DATA = [
             { tag: "Colazione", slot: "Colazione (Berlino)", content: "1 uovo, 1 fetta piccola di pane, 1 slice di bacon, un caffè grande", status: "Flessibile", notes: "Gestione della colazione in trasferta." },
             { tag: "Pranzo", slot: "Pranzo (Berlino)", content: "Pizza Margherita + piccola zuppa di patate e porri", status: "Flessibile", notes: "Combinazione di carboidrati densi e comfort food." },
             { tag: "Merenda", slot: "Merenda", content: "1 banana + caffè immancabili", status: "Perfetto", notes: "Ricarica classica pomeridiana." },
-            { tag: "Cena", slot: "Cena (Ristorante Vegetariano)", content: "Piatto unico Mediterraneo pulito a base vegetale", status: "Ottimo", notes: "Cena pulita al rientro dall'ufficio di Berlino." }
+            { tag: "Cena", slot: "Cena (Ristorante Vegetariano)", content: "Piatto unico Mediterraneo: hummus normale, baba ghanoush, un uovo fritto, due falafel, un dolma (riso con verdure in foglia), insalata di carciofi, chicchi di melograno, semi di girasole tostati e un pane pita", status: "Ottimo", notes: "Cena spettacolare, ricca di grassi sani e micronutrienti di altissima qualità da fonti vegetali, bilanciata dall'uovo e dal pane pita." }
         ]
     },
     {
@@ -173,9 +196,9 @@ const JOURNAL_DATA = [
         sortDate: "2026-07-07",
         meals: [
             { tag: "Colazione", slot: "Colazione", content: "3 caffè, quota di frutta secca consigliata", status: "Perfetto", notes: "Abitudine della frutta secca mattutina consolidata con successo." },
-            { tag: "Pranzo", slot: "Pranzo", content: "Pasta in bianco con burro + 240g bastoncini di merluzzo (fish fingers)", status: "Flessibile", notes: "Assenza di verdure a pranzo compensata alla grande a cena. Ottima quota proteica dal merluzzo (panatura leggera ideale per il surplus di massa)." },
+            { tag: "Pranzo", slot: "Pranzo", content: "Pasta in bianco con burro + 240g bastoncini di merluzzo (fish fingers)", status: "Flessibile", notes: "Assenza di verdure a pranzo compensata alla grande a cena. Ottima quota proteica dal merluzzo." },
             { tag: "Merenda", slot: "Merenda", content: "1 banana + 1 pacchetto piccolo di cracker al cheddar (~3.4g proteine)", status: "Flessibile", notes: "Crackers usati come test energetico pomeridiano." },
-            { tag: "Cena", slot: "Cena (Pasto Unico)", content: "Maxi porzione di pasta con abbondanti ceci, tonnellate di spinaci, salsa di pomodoro e olio EVO", status: "Perfetto", notes: "Pasto unico immenso che raggruppa tutti i macro serali previsti. Ottimo volume di verdure e ottima combinazione di carboidrati e proteine vegetali dai ceci." }
+            { tag: "Cena", slot: "Cena (Pasto Unico)", content: "Maxi porzione di pasta con abbondanti ceci, tonnellate di spinaci, salsa di pomodoro e olio EVO", status: "Perfetto", notes: "Pasto unico immenso che raggruppa tutti i macro serali previsti. Ottimo volume con gli spinaci." }
         ]
     },
     {
@@ -199,7 +222,7 @@ const JOURNAL_DATA = [
             { tag: "Colazione", slot: "Colazione", content: "2 caffè, 1 fetta di pane con burro", status: "Flessibile", notes: "Rientro controllato nella routine casalinga." },
             { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante la giornata", status: "Perfetto", notes: "Target idratazione di 2.5L pienamente supportato." },
             { tag: "Attività", slot: "Attività", content: "1 pinta di birra + sessione di ciclismo e camminata", status: "Attivo", notes: "Alcol ampiamente bilanciato dall'attività cardiovascolare in bicicletta." },
-            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite come switch proteico serale." }
+            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite como switch proteico serale." }
         ]
     },
     {
@@ -214,7 +237,7 @@ const JOURNAL_DATA = [
         ]
     },
     {
-        date: "Giovedì 2 Luglio 2026",
+        date: "Giomedì 2 Luglio 2026",
         week: "W1",
         sortDate: "2026-07-02",
         meals: [
