@@ -74,16 +74,50 @@ const WEIGHT_DATA = [
 ];
 
 // ==========================================
-// 2. DIARIO ALIMENTARE COMPLETO (DAL 29 GIUGNO AL 18 LUGLIO)
+// 2. DIARIO ALIMENTARE COMPLETO (DAL 29 GIUGNO AL 21 LUGLIO)
 // ==========================================
 const JOURNAL_DATA = [
+    {
+        date: "Martedì 21 Luglio 2026",
+        week: "W4",
+        sortDate: "2026-07-21",
+        meals: [
+            { tag: "Colazione", slot: "Colazione", content: "45g di mix di frutta secca consigliata + 3 caffè", status: "Perfetto", notes: "Quota grassi sani mattutina consolidata sui 45g." },
+            { tag: "Pranzo", slot: "Pranzo", content: "Risotto con 1 zucchina intera cucinata + 3 uova come fonte proteica", status: "Perfetto", notes: "Pasto bilanciato ed eccellente. 3 uova intere garantiscono un profilo aminoacidico perfetto per la massa muscolare." }
+        ]
+    },
+    {
+        date: "Lunedì 20 Luglio 2026",
+        week: "W4",
+        sortDate: "2026-07-20",
+        meals: [
+            { tag: "Colazione", slot: "Colazione", content: "~50g di mix (mandorle, noci, anacardi, semi di girasole tostati/salati) + 3 caffè + acqua", status: "Perfetto", notes: "Ottimo apporto calorico iniziale da grassi sani." },
+            { tag: "Pranzo", slot: "Pranzo (All-in-One)", content: "165g di riso misto (bianco e integrale) con lenticchie, 3 fette sottili di carne secca (~35-40g), parmigiano, olio EVO e scorza di limone", status: "Perfetto", notes: "Piatto unico strategico ad altissima densità nutrizionale." },
+            { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Ricarica rapida di carboidrati pre-workout." },
+            { tag: "Attività", slot: "Allenamento / Bici", content: "Sessione di ciclismo breve (~5 km complessivi)", status: "Attivo", notes: "Buon stimolo cardiovascolare e metabolico nel pomeriggio." },
+            { tag: "Cena", slot: "Cena", content: "2 filetti di salmone al forno (~150-160g), patate e melanzane al forno, 1 filoncino di pane sgelato al forno condito con olio EVO, origano e sale + 1 sacchetto di patatine sfiziose (ridge cut) + molta acqua", status: "Ottimo", notes: "Cena pulita ed estremamente nutriente: proteine e omega-3 nobili dal salmone, doppia fonte di carboidrati complessi (patate + pane) e grassi/sodio extra dalle patatine per la massa." }
+        ]
+    },
+    {
+        date: "Domenica 19 Luglio 2026",
+        week: "W3",
+        sortDate: "2026-07-19",
+        meals: [
+            { tag: "Colazione", slot: "Colazione", content: "45g di mix controllato: mandorle, noci, pochi anacardi e semi di girasole tostati e salati", status: "Perfetto", notes: "Target frutta secca mattutina ottimamente centrato secondo i nuovi parametri energetici." },
+            { tag: "Pranzo", slot: "Pranzo", content: "150g di pasta con salsa di pomodoro fresco + 1/3 di tortilla de patata avanzata (patate, cipolle, ~2 uova complessive)", status: "Perfetto", notes: "Carboidrati ideali centrati al grammo (150g). Ottimo riciclo proteico della tortilla casalinga." },
+            { tag: "Merenda", slot: "Merenda", content: "1 banana + caffè della giornata", status: "Perfetto", notes: "Frutta giornaliera inserita correttamente." },
+            { tag: "Cena", slot: "Cena al Pub (Mondiali)", content: "1 porzione di patatine fritte normali, 1 porzione di patate dolci fritte, un po' di chicken popcorn + 2 birre", status: "Regola 80/20", notes: "Cena al pub per la finale. Qualità del cibo molto bassa: limitati saggiamente i danni evitando piatti peggiori o burger scadenti." }
+        ]
+    },
     {
         date: "Sabato 18 Luglio 2026",
         week: "W3",
         sortDate: "2026-07-18",
         meals: [
-            { tag: "Colazione", slot: "Colazione", content: "3 fette di pane con burro, origano e un pizzico di sale + 45g di mix (noci, semi di girasole, mandorle, senza anacardi)", status: "Perfetto", notes: "Ottimo l'incremento controllato della frutta secca a 45g, ideale per sostenere l'apporto calorico in massa con grassi sani." },
-            { tag: "Pranzo", slot: "Pranzo", content: "Riso al forno con salsa di pomodoro, scorza di limone e abbondante parmigiano grattugiato", status: "Perfetto", notes: "Primo piatto denso, energetico e pulito. Ottimo l'uso della scorza di limone per la freschezza e la digestione." }
+            { tag: "Colazione", slot: "Colazione", content: "3 fette di pane con burro, origano e un pizzico di sale + 45g di mix (noci, semi di girasole, mandorle, senza anacardi)", status: "Perfetto", notes: "Ottimo l'incremento controllato della frutta secca a 45g." },
+            { tag: "Pranzo", slot: "Pranzo", content: "Riso al forno con salsa di pomodoro, scorza di limone e abbondante parmigiano grattugiato", status: "Perfetto", notes: "Primo piatto denso, energetico e pulito." },
+            { tag: "Merenda", slot: "Merenda", content: "1 banana", status: "Perfetto", notes: "Frutta pomeridiana ok." },
+            { tag: "Cena", slot: "Cena", content: "Abbondante piatto di pasta con lenticchie decorticate + 1/3 di tortilla de patata fatta in casa (con patate e cipolle, ~2 uova) + un piccolissimo gelato condiviso con la fidanzata", status: "Ottimo", notes: "Splendido abbinamento di carboidrati e proteine. Dolce post-cena gestito con ottima moderazione." }
         ]
     },
     {
@@ -91,9 +125,9 @@ const JOURNAL_DATA = [
         week: "W3",
         sortDate: "2026-07-17",
         meals: [
-            { tag: "Colazione", slot: "Colazione", content: "Mix abbondante di 45-50g di noci, mandorle, semi di girasole e anacardi", status: "Perfetto", notes: "Quota di frutta secca leggermente maggiorata per preferenza personale, ottima mossa per la massa." },
+            { tag: "Colazione", slot: "Colazione", content: "Mix abbondante di 45-50g di noci, mandorle, semi di girasole e anacardi", status: "Perfetto", notes: "Quota di frutta secca leggermente maggiorata per preferenza personale." },
             { tag: "Pranzo", slot: "Pranzo", content: "Orecchiette con salsa di pomodoro + 1 uovo sul lato", status: "Perfetto", notes: "Uso ottimale della pasta rimasta con l'uovo come sprint proteico rapido." },
-            { tag: "Merenda", slot: "Merenda", content: "3 fette di pane con burro, origano e un pizzico di sale + 1 banana + caffè immancabili", status: "Perfetto", notes: "Spuntino solido e calorico. Ottimo abbinamento carboidrati/grassi pre-serata." },
+            { tag: "Merenda", slot: "Merenda", content: "3 fette di pane con burro, origano e un pizzico di sale + 1 banana + caffè immancabili", status: "Perfetto", notes: "Spuntino solido e calorico." },
             { tag: "Cena", slot: "Cena (Black Bear Burger)", content: "Double smash burger con double cheese, double bacon, patatine fritte + 3 birre", status: "Regola 80/20", notes: "Cena da urlo in uno dei migliori burger shop di Londra. Boost calorico pazzesco per la massa muscolare." },
             { tag: "Attività", slot: "Passi Spontanei", content: "Lunga camminata serale per completare i target di movimento", status: "Attivo", notes: "Ottimo bilanciamento metabolico per gestire la cena densa e le birre." }
         ]
@@ -129,7 +163,7 @@ const JOURNAL_DATA = [
             { tag: "Colazione", slot: "Colazione (Berlino)", content: "1 uovo, 1 fetta piccola di pane, 1 slice di bacon, un caffè grande", status: "Flessibile", notes: "Gestione della colazione in trasferta." },
             { tag: "Pranzo", slot: "Pranzo (Berlino)", content: "Pizza Margherita + piccola zuppa di patate e porri", status: "Flessibile", notes: "Combinazione di carboidrati densi e comfort food." },
             { tag: "Merenda", slot: "Merenda", content: "1 banana + caffè immancabili", status: "Perfetto", notes: "Ricarica classica pomeridiana." },
-            { tag: "Cena", slot: "Cena (Ristorante Vegetariano)", content: "Piatto unico Mediterraneo: hummus normale, baba ghanoush, un uovo fritto, due falafel, un dolma (riso con verdure in foglia), insalata di carciofi, chicchi di melograno, semi di girasole tostati e un pane pita", status: "Ottimo", notes: "Cena spettacolare, ricca di grassi sani e micronutrienti di altissima qualità da fonti vegetali, bilanciata dall'uovo e dal pane pita." }
+            { tag: "Cena", slot: "Cena (Ristorante Vegetariano)", content: "Piatto unico Mediterraneo: hummus normale, baba ghanoush, un uovo fritto, due falafel, un dolma (riso con verdure in foglia), insalata di carciofi, chicchi di melograno, semi di girasole tostati e un pane pita", status: "Ottimo", notes: "Cena spettacolare, ricca di grassi sani e micronutrienti di altissima qualità da fonti vegetali." }
         ]
     },
     {
@@ -210,7 +244,7 @@ const JOURNAL_DATA = [
             { tag: "Pranzo", slot: "Pranzo", content: "150g pasta con 250g zucchine + 1/3 tortilla de patata (2 uova, patate)", status: "Perfetto", notes: "Centrato perfettamente l'obiettivo di 150g di pasta e l'alto volume di verdure (250g)." },
             { tag: "Merenda", slot: "Merenda (Snack)", content: "~40g di pane fresco", status: "Flessibile", notes: "Mangiato nel pomeriggio appena comprato dal panettiere." },
             { tag: "Cena", slot: "Cena", content: "Fette di pane multiple con pomodori, avocado, funghi e olio EVO + l'ultima fetta di tortilla de patata (1/6)", status: "Ottimo", notes: "Ottima combinazione di carboidrati e grassi sani dall'avocado e dall'olio EVO. Finita la tortilla." },
-            { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante il giorno + 0.5L di acqua con 1/2 cucchiaio di zucchero e un pizzico di sale", status: "Perfetto", notes: "Strategia idrica eccellente per supportare l'attività fisica e reintegrare i minerali con il caldo." },
+            { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante il giorno + 0.5L di acqua con 1/2 cucnaio di zucchero e un pizzico di sale", status: "Perfetto", notes: "Strategia idrica eccellente per supportare l'attività fisica e reintegrare i minerali con il caldo." },
             { tag: "Attività", slot: "Attività", content: "1 ora di ciclismo intenso nel pomeriggio + Sessione in palestra alle 16:00 (Rower/Vogatore: serie da 500m)", status: "Perfetto", notes: "Allenamento ad altissima intensità. Sessione combinata di cardio e vogatore completata con successo nonostante la fatica." }
         ]
     },
@@ -222,7 +256,7 @@ const JOURNAL_DATA = [
             { tag: "Colazione", slot: "Colazione", content: "2 caffè, 1 fetta di pane con burro", status: "Flessibile", notes: "Rientro controllato nella routine casalinga." },
             { tag: "Idratazione", slot: "Idratazione", content: "Molta acqua durante la giornata", status: "Perfetto", notes: "Target idratazione di 2.5L pienamente supportato." },
             { tag: "Attività", slot: "Attività", content: "1 pinta di birra + sessione di ciclismo e camminata", status: "Attivo", notes: "Alcol ampiamente bilanciato dall'attività cardiovascolare in bicicletta." },
-            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite como switch proteico serale." }
+            { tag: "Cena", slot: "Cena", content: "1 pizza surgelata ai peperoni + 1/3 tortilla de patata (2 uova, patate, cipolla)", status: "Mass Fuel", notes: "Utilizzo intelligente degli avanzi. Uova inserite come switch proteico serale." }
         ]
     },
     {
@@ -237,7 +271,7 @@ const JOURNAL_DATA = [
         ]
     },
     {
-        date: "Giomedì 2 Luglio 2026",
+        date: "Giovedì 2 Luglio 2026",
         week: "W1",
         sortDate: "2026-07-02",
         meals: [
